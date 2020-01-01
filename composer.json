@@ -1,0 +1,17 @@
+{
+    "name": "waynecook/larafilter",
+    "description": "This is my fist package",
+    "authors": [
+        {
+            "name": "Wayne Cook",
+            "email": "waynedemetra@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "WayneCook\\LaraFilter\\": "packages/WayneCook/LaraFilter/src"
+        }
+    }
+}
