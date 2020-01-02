@@ -11,7 +11,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "WayneCook\\LaraFilter\\": "packages/WayneCook/LaraFilter/src"
+            "WayneCook\\LaraFilter\\": "src/"
         }
     }
 }
