@@ -15,24 +15,11 @@ trait LaraFilter {
 
         return response()->json([
             'collection' => $this->process($query, request()->all(), $this->filterable)
-            //     ->orderBy(
-            //     request('sortBy')[0],
-            //     filter_var(request('sortDesc')[0], FILTER_VALIDATE_BOOLEAN) ? 'desc' : 'asc'
-            // )
-            ->paginate(request('itemsPerPage', 10))]);
+                ->orderBy(request('sortBy', 'id'), request('sortDesc', 'desc'))
+                ->paginate(request('itemsPerPage', 5))
+            ]);
     }
 
-    // public function scopeExportExcel($query)
-    // {
-
-    //     return response()->json([
-    //         'collection' => $this->process($query, request()->all())
-    //             ->orderBy(
-    //             request('sortBy')[0],
-    //             filter_var(request('sortDesc')[0], FILTER_VALIDATE_BOOLEAN) ? 'desc' : 'asc'
-    //         )
-    //         ->get()]);
-    // }
 
     public function process($query, $data, $config)
     {
