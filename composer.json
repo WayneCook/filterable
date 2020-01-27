@@ -1,5 +1,5 @@
 {
-    "name": "waynecook/larafilter",
+    "name": "waynecook/filterable",
     "description": "This is my fist package",
     "authors": [
         {
@@ -11,7 +11,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "WayneCook\\LaraFilter\\": "src/"
+            "WayneCook\\Filterable\\": "src/"
         }
     }
 }

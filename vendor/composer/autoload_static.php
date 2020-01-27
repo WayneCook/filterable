@@ -6,9 +6,25 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit5d85d13afbb76ce096bf5528db411e85
 {
+    public static $prefixLengthsPsr4 = array (
+        'W' => 
+        array (
+            'WayneCook\\Filterable\\' => 21,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'WayneCook\\Filterable\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/packages/WayneCook/Filterable/src',
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5d85d13afbb76ce096bf5528db411e85::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5d85d13afbb76ce096bf5528db411e85::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }
