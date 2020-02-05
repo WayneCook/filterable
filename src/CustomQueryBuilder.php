@@ -13,7 +13,7 @@ class CustomQueryBuilder {
     {
 
 
-        $filters = $builder->filters()->valid();
+        $filters = $builder->filterValidator->validateFilters()->valid();
 
         if(isset($filters['match_all'])) {
             filter_var($filters['match_all'], FILTER_VALIDATE_BOOLEAN) ?
@@ -33,6 +33,8 @@ class CustomQueryBuilder {
         if(isset($filters['order_by']) && isset($filters['order_direction'])) {
             $builder->orderBy($filters['order_by'], $filters['order_direction']);
         }
+
+        return $builder;
 
 
         return $builder->paginate(isset($filters['limit']) ? $filters['limit'] : 5);

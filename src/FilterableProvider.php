@@ -1,6 +1,6 @@
 <?php
 
-namespace WayneCook\Filterable\config;
+namespace WayneCook\Filterable;
 
 use WayneCook\Filterable\CustomQueryBuilder;
 use WayneCook\Filterable\FilterValidator;
@@ -9,11 +9,13 @@ use WayneCook\Filterable\CustomBuilder;
 use Illuminate\Http\Request;
 
 
-class Provider extends ServiceProvider
+class FilterableProvider extends ServiceProvider
 {
 
     public function register()
     {
+
+        $this->mergeConfigFrom(__DIR__.'/../config/allowed-operators.php', 'operators');
 
         $this->app->bind('CustomBuilder', function ($app, $options) {
             return  new CustomBuilder($options['model'], new CustomQueryBuilder, new FilterValidator(request()));
@@ -28,6 +30,5 @@ class Provider extends ServiceProvider
      */
     public function boot()
     {
-
     }
 }

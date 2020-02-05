@@ -1,28 +1,19 @@
 <?php
 namespace WayneCook\Filterable;
 
-
 class FilterValidator
 {
 
-    protected $filters;
+    protected $request;
+    protected $allowedFilters;
 
-
-    public function __construct($filters) {
-
-        $this->filters = $filters;
-        $this->validateFilters();
+    public function __construct($request) {
+        $this->request = $request;
     }
 
     public function validateFilters() {
 
-        $this->filters = validator()->make($this->filters->all(), $this->rules());
-
-    }
-
-    public function get() {
-
-        return $this->filters;
+        return validator()->make($this->request->all(), $this->rules());
 
     }
 
@@ -35,7 +26,7 @@ class FilterValidator
             // advanced filter
             'match_all' => 'sometimes|required|in:true,false',
             'filter' => 'sometimes|required|array',
-            'f.*.column' => 'required',
+            'f.*.column' => 'required|in:'.$this->orderableColumns(),
             'f.*.operator' => 'required_with:f.*.column|in:'.$this->allowedOperators(),
             'f.*.first_value' => 'required',
             'f.*.second_value' => 'required_if:f.*.operator,between,not_between'
@@ -45,34 +36,20 @@ class FilterValidator
 
     protected function whiteListColumns()
     {
-        return implode(',', $this->allowedFilters);
+        return $this->allowedFilters;
     }
     protected function orderableColumns()
     {
-
-        $orderable = ['id','name', 'email'];
-        return implode(',', $orderable);
+        return $this->allowedFilters;
     }
     protected function allowedOperators()
     {
-        return implode(',', [
-            'equal_to',
-            'not_equal_to',
-            'less_than',
-            'greater_than',
-            'between',
-            'not_between',
-            'contains',
-            'starts_with',
-            'ends_with',
-            'in_the_past',
-            'in_the_next',
-            'in_the_peroid',
-            'less_than_count',
-            'greater_than_count',
-            'equal_to_count',
-            'not_equal_to_count'
-        ]);
+        return implode(',', config('operators.allowed-operators'));
+    }
+
+    public function setAllowedFilters($columns) {
+
+        $this->allowedFilters = implode(',', $columns);
     }
 
 }

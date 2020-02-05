@@ -2,11 +2,12 @@
 
 namespace WayneCook\Filterable;
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 use WayneCook\Filterable\CustomQueryBuilder;
 use WayneCook\Filterable\FilterValidator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use WayneCook\Filterable\Filter;
@@ -15,18 +16,18 @@ use Illuminate\Http\Request;
 
 class CustomBuilder extends Builder {
 
-    protected $filters;
     protected $allowedFilters;
     protected $customQueryBuilder;
+    public $filterValidator;
 
-    public function __construct($builder, CustomQueryBuilder $customQueryBuilder, FilterValidator $filters)
+    public function __construct($builder, CustomQueryBuilder $customQueryBuilder, FilterValidator $filterValidator)
     {
 
         parent::__construct(clone $builder->getQuery());
 
         $this->initializeFromBuilder($builder::query());
 
-        $this->filters = $filters->get();
+        $this->filterValidator = $filterValidator;
 
         $this->customQueryBuilder = $customQueryBuilder;
 
@@ -49,25 +50,25 @@ class CustomBuilder extends Builder {
     public function filter($columns)
     {
 
-        if(is_array($columns)) {
-            $this->allowedFilters = $columns;
-        }
+        $this->filterValidator->setAllowedFilters($columns);
 
-        if($this->filters->fails()) {
-            return $this->filters->errors();
-        }
+        return $this;
 
-        return $this->customQueryBuilder->apply($this);
     }
 
-    public function filters()
-    {
-        return $this->filters;
-    }
 
-    public function getAllowedFilters()
-    {
-        return $this->allowedFilters;
+    public function get($columns = ['*']) {
+
+        $filters = $this->filterValidator->validateFilters();
+
+        if($filters->fails()) {
+            throw new HttpResponseException(response()->json($filters->errors(), 422));
+        }
+
+        $this->customQueryBuilder->apply($this);
+
+        return parent::get($columns);
+
     }
 
 }
